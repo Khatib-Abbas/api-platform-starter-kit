@@ -1,0 +1,59 @@
+include:
+  - compose-mysql.yaml
+
+services:
+  php:
+    image: ${IMAGES_PREFIX:-}app-php
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      PWA_UPSTREAM: pwa:3000
+      SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
+      MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      TRUSTED_HOSTS: ${TRUSTED_HOSTS:-^${SERVER_NAME:-example\.com|localhost}|php$$}
+      DATABASE_URL: mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-userpassword}@database:3306/${MYSQL_DATABASE:-mydatabase}
+#      DATABASE_URL: mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-userpassword}@database:3306/${MYSQL_DATABASE:-mydatabase}?serverVersion=8.0&ssl-mode=VERIFY_CA&ssl-ca=/certs/ca.pem&ssl-cert=/certs/client-cert.pem&ssl-key=/certs/client-key.pem
+      MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
+      MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:-localhost}/.well-known/mercure}
+      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      API_KEY_FILE: /run/secrets/api_key
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./certs:/certs
+    secrets:
+      - api_key
+    ports:
+      # HTTP
+      - target: 80
+        published: ${HTTP_PORT:-80}
+        protocol: tcp
+      # HTTPS
+      - target: 443
+        published: ${HTTPS_PORT:-443}
+        protocol: tcp
+      # HTTP/3
+      - target: 443
+        published: ${HTTP3_PORT:-443}
+        protocol: udp
+
+  pwa:
+    depends_on:
+      database:
+        condition: service_completed_successfully
+    image: ${IMAGES_PREFIX:-}app-pwa
+    environment:
+      NEXT_PUBLIC_ENTRYPOINT: http://php
+
+volumes:
+  caddy_data:
+  caddy_config:
+  mysql_certs:
+
+secrets:
+  api_key:
+    file: secrets/api_key.txt

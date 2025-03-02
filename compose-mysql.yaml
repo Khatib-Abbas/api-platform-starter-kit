@@ -1,0 +1,43 @@
+services:
+  database:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    
+#    ports:
+#      - "3306:3306"
+    volumes:
+      - ./db:/var/lib/mysql
+      - ./certs:/etc/mysql/certs
+    command: [
+      # SSL Certificates
+      "--ssl-ca=/etc/mysql/certs/ca-cert.pem",
+      "--ssl-cert=/etc/mysql/certs/server-cert.pem",
+      "--ssl-key=/etc/mysql/certs/server-key.pem",
+      
+      # SSL Session Cache optimization
+      "--ssl-session-cache-mode=ON",
+      "--ssl-session-cache-timeout=7200",
+      
+      # Buffer sizes for SSL
+      "--max-allowed-packet=256M",
+      "--thread-stack=384K",
+      
+      # Connection timeouts
+      "--connect-timeout=15",
+      "--interactive-timeout=28800",
+      "--wait-timeout=28800"
+    ]
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+volumes:
+  mysql_certs:
+
