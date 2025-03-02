@@ -6,3 +6,4 @@ secrets/*
 db
 certs
 .idea
+mysql_certs

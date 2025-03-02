@@ -1,0 +1,25 @@
+services:
+    traefik:
+        depends_on:
+            mkcert:
+                condition: service_completed_successfully
+        container_name: traefik.docker.localhost
+        image: traefik:v2.10
+        command:
+            - "--log.level=DEBUG"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker=true"
+            - "--entrypoints.web.address=:80"
+        ports:
+            # Web
+            - 80:80
+            - 443:443
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+            # Map the static configuration into the container
+            - ./traefik/static.yaml:/etc/traefik/traefik.yml:ro
+            # Map the dynamic configuration into the container
+            - ./traefik/dynamic.yaml:/etc/traefik/dynamic.yml:ro
+            # Map the certificates into the container
+            - ./certs/website_certs:/etc/certs:ro

@@ -2,8 +2,8 @@
 
 # Create directory for certificates
 # This ensures we have a dedicated location for our SSL certificates
-mkdir -p certs
-cd certs
+mkdir -p certs/mysql_certs
+cd certs/mysql_certs
 
 # Create temporary SAN (Subject Alternative Names) configuration file
 # This file contains all the certificate settings and extensions
@@ -70,7 +70,7 @@ openssl x509 -in server-cert.pem -text -noout | grep DNS:
 rm san.cnf
 
 # Display success message and list generated files
-echo "\nCertificates successfully generated in certs/ directory"
+echo "\nCertificates successfully generated in certs/mysql_certs/ directory"
 ls -l
 
 # Generated files explanation:

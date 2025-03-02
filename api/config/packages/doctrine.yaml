@@ -11,9 +11,7 @@ doctrine:
                     collation: utf8mb4_unicode_ci
                 options:
                     # MySQL SSL/TLS Context Options pour PDO
-                    !php/const PDO::MYSQL_ATTR_SSL_CA: '/certs/ca-cert.pem'
-#                    !php/const PDO::MYSQL_ATTR_SSL_CERT: '/certs/client-cert.pem'
-#                    !php/const PDO::MYSQL_ATTR_SSL_KEY: '/certs/client-key.pem'
+                    !php/const PDO::MYSQL_ATTR_SSL_CA: '/mysql_certs/ca-cert.pem'
                     !php/const PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT: true
                 profiling_collect_backtrace: '%kernel.debug%'
     orm:

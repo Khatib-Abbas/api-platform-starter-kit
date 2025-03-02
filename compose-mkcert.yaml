@@ -1,0 +1,18 @@
+services:
+    mkcert:
+        container_name: mkcert
+        image: alpine/mkcert
+        entrypoint: >
+            /bin/sh -c
+            "
+              if [ -f /etc/certs/local-cert.pem ] && [ -f /etc/certs/local-key.pem ]; then
+                echo 'Certificats existants trouvés, aucune régénération nécessaire.';
+              else
+                echo 'Certificats manquants, génération en cours...';
+                mkcert -cert-file /etc/certs/local-cert.pem -key-file /etc/certs/local-key.pem 'docker.localhost' '*.docker.localhost';
+              fi
+              chown -R 1000:root /etc/certs;
+              exit 0;
+            "
+        volumes:
+            - ./certs/website_certs:/etc/certs

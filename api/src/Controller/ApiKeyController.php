@@ -23,7 +23,8 @@ class ApiKeyController extends AbstractController
     public function getApiKey(): JsonResponse
     {
         return new JsonResponse([
-            'api_key' => $this->getParameter('app.api_key')
+            'api_key' => $this->getParameter('app.api_key'),
+            'hostName'=>gethostname()
         ]);
     }
 }

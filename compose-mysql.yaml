@@ -1,7 +1,6 @@
 services:
   database:
     image: mysql:8.0
-    container_name: mysql_container
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -13,7 +12,7 @@ services:
 #      - "3306:3306"
     volumes:
       - ./db:/var/lib/mysql
-      - ./certs:/etc/mysql/certs
+      - ./certs/mysql_certs:/etc/mysql/certs
     command: [
       # SSL Certificates
       "--ssl-ca=/etc/mysql/certs/ca-cert.pem",

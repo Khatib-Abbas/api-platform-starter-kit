@@ -1,4 +1,4 @@
-# Install certs
+# 1. Install certs
 
 ```bash
 
@@ -7,7 +7,7 @@ chmod +x openssl_certs.sh && ./openssl_certs.sh
 ```
 ---
 
-# Install deps
+# 2. Install deps (optional)
 
 ```bash
 
@@ -17,17 +17,9 @@ chmod +x update-deps.sh ./update-deps.sh
 
 ---
 
-# Run Container
-
-```bash
-
-docker compose up -d --build
-
-```
-
 ---
 
-# Secrets
+# 3. Set the Secrets
 
 https://symfony.com/doc/current/configuration/env_var_processors.html
 
@@ -59,3 +51,11 @@ Call the env in php
 
 
 ---
+
+# 4. Run Container
+
+```bash
+
+docker compose up -d --remove-orphans
+
+```
