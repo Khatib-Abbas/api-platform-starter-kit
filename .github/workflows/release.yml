@@ -44,12 +44,3 @@ jobs:
       -
         name: Update API Platform
         run: docker compose run php composer update api-platform/symfony:${{ inputs.tag }} api-platform/doctrine-orm:${{ inputs.tag }}
-      -
-        name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          commit-message: 'chore: api-platform ${{ inputs.tag }}'
-          branch: api-platform-core
-          title: 'chore: api-platform ${{ inputs.tag }}'
-          token: ${{ secrets.RELEASE_TOKEN }}
-          body: 'Updates api-platform/core to ${{ inputs.tag }}'
