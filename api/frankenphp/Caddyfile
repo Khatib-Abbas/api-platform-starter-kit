@@ -1,7 +1,5 @@
 {
 	{$CADDY_GLOBAL_OPTIONS}
-	debug
-	auto_https off
 	frankenphp {
 		{$FRANKENPHP_CONFIG}
 	}

@@ -8,15 +8,15 @@ services:
     depends_on:
       database:
         condition: service_healthy
-#    deploy:
-#      mode: replicated
-#      replicas: 2
-#      endpoint_mode: vip
-#    restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: vip
+    restart: unless-stopped
     environment:
       SERVER_NAME: :8443
       TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
-      TRUSTED_HOSTS: ${TRUSTED_HOSTS:-^${SERVER_NAME:-example\.com|localhost}|php|php\.docker\.localhost$$}
+      TRUSTED_HOSTS: ${TRUSTED_HOSTS:-^${SERVER_NAME:-php\.docker\.localhost}|php$$}
       DATABASE_URL: mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-userpassword}@database:3306/${MYSQL_DATABASE:-mydatabase}
       API_KEY_FILE: /run/secrets/api_key
     volumes:
